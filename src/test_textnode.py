@@ -1,6 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
+from leafnode import LeafNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -23,6 +24,26 @@ class TestTextNode(unittest.TestCase):
     def test_isnone(self):
         node8 = TextNode("what", TextType.NORMAL_TEXT)
         node9 = TextNode("Weeee", TextType.BOLD_TEXT, None)
+
+    def test_convert(self):
+        testTN = TextNode("Important", TextType.BOLD_TEXT)
+        testLN = TextNode.text_node_to_html_node(testTN)
+        result = testLN.to_html()
+        self.assertEqual(result, "<b>Important</b>")
+        testTN2 = TextNode("Not Important", TextType.NORMAL_TEXT)
+        testLN2 = TextNode.text_node_to_html_node(testTN2)
+        result2 = testLN2.to_html()
+        self.assertEqual(result2, "Not Important")
+        testTN3 = TextNode("link", TextType.LINKS, "https://link.me/now")
+        testLN3 = TextNode.text_node_to_html_node(testTN3)
+        result3 = testLN3.to_html()
+        self.assertEqual(result3, '<a href="https://link.me/now">link</a>')
+        testTN4 = TextNode("got milk?", TextType.IMAGES, "./someplace/pc/milk.jpg")
+        testLN4 = TextNode.text_node_to_html_node(testTN4)
+        result4 = testLN4.to_html()
+        self.assertEqual(result4, '<img src="./someplace/pc/milk.jpg">got milk?</img>')
+
+    
 
 
 if __name__ == "__main__":

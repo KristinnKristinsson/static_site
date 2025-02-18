@@ -1,6 +1,7 @@
 import unittest
 
 from leafnode import LeafNode
+#from textnode import TextNode, TextType
 
 
 class TestLeafNode(unittest.TestCase):
@@ -19,6 +20,8 @@ class TestLeafNode(unittest.TestCase):
         node4 = LeafNode("p", None)
         with self.assertRaises(ValueError):
             node4.to_html()
+    
+    
 
 
 if __name__ == "__main__":
