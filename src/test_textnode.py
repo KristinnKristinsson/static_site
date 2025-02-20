@@ -5,6 +5,7 @@ from leafnode import LeafNode
 
 
 class TestTextNode(unittest.TestCase):
+    maxDiff = None
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD_TEXT)
         node2 = TextNode("This is a text node", TextType.BOLD_TEXT)
@@ -43,8 +44,38 @@ class TestTextNode(unittest.TestCase):
         result4 = testLN4.to_html()
         self.assertEqual(result4, '<img src="./someplace/pc/milk.jpg">got milk?</img>')
 
-    
-
+    def test_splitNodesDelimiter(self):
+        node = TextNode("*hi*", TextType.NORMAL_TEXT)
+        result = node.split_nodes_delimiter(node.text)
+        self.assertEqual(f"{result}", "[TextNode(hi, italic, None)]")
+        node2 = TextNode("*Just* **one** word.", TextType.NORMAL_TEXT)
+        result2 = node2.split_nodes_delimiter(node2.text)
+        self.assertEqual(f"{result2}", "[TextNode(Just, italic, None), TextNode( , normal, None), TextNode(one, bold, None), TextNode( word., normal, None)]")
+        node3 = TextNode("What a *beautiful*, most **magnificent** morning", TextType.NORMAL_TEXT)
+        result3 = node3.split_nodes_delimiter(node3.text)
+        self.assertEqual(f"{result3}", "[TextNode(What a , normal, None), "
+                         + "TextNode(beautiful, italic, None), "
+                         + "TextNode(, most , normal, None), "
+                         + "TextNode(magnificent, bold, None), "
+                         + "TextNode( morning, normal, None)]")
+        node4 = TextNode("a beautiful sunshine `this is a sun` that **shines** with it's "
+                        + "*rays* on the **beautiful serene pond** as the *swans gracefully go by* in the evening.", TextType.NORMAL_TEXT)
+        result4 = node4.split_nodes_delimiter(node4.text)
+        self.assertEqual(f"{result4}", "[TextNode(a beautiful sunshine , normal, None), "
+                         + "TextNode(this is a sun, code, None), "
+                         + "TextNode( that , normal, None), "
+                         + "TextNode(shines, bold, None), "
+                         + "TextNode( with it's , normal, None), "
+                         + "TextNode(rays, italic, None), "
+                         + "TextNode( on the , normal, None), "
+                         + "TextNode(beautiful serene pond, bold, None), "
+                         + "TextNode( as the , normal, None), "
+                         + "TextNode(swans gracefully go by, italic, None), "
+                         + "TextNode( in the evening., normal, None)]")
+    def test_err(self):
+        node = TextNode("here is the text", TextType.BOLD_TEXT)
+        with self.assertRaises(Exception):
+            node.split_nodes_delimiter(node.text)
 
 if __name__ == "__main__":
     unittest.main()
