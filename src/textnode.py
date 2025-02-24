@@ -1,5 +1,6 @@
 from enum import Enum
 from leafnode import LeafNode
+import re
 
 class TextType(Enum):
     NORMAL_TEXT = "normal"
@@ -99,6 +100,17 @@ class TextNode():
         #Return a TextNode in the right order.
         #Return them in order
         #split them depending on the 
+
+    def extract_markdown_images(text):
+        if not isinstance(text, str):
+            raise ValueError("Not a string.")
+        list_of_imgs = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+        return list_of_imgs
+    def extract_markdown_links(text):
+        if not isinstance(text, str):
+            raise ValueError("Not a string.")
+        list_of_links = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+        return list_of_links
 
     def __eq__(self, other):
        return self.text == other.text and self.text_type == other.text_type and self.url == other.url

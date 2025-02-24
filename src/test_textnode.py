@@ -2,6 +2,7 @@ import unittest
 
 from textnode import TextNode, TextType
 from leafnode import LeafNode
+import re
 
 
 class TestTextNode(unittest.TestCase):
@@ -76,6 +77,24 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("here is the text", TextType.BOLD_TEXT)
         with self.assertRaises(Exception):
             node.split_nodes_delimiter(node.text)
+
+    def test_markdownimgs(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        result = TextNode.extract_markdown_images(text)
+        text2 = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        result2 = TextNode.extract_markdown_links(text2)
+        self.assertEqual(f"{result}", "[('rick roll', 'https://i.imgur.com/aKaOqIh.gif'), ('obi wan', 'https://i.imgur.com/fJRm4Vk.jpeg')]")
+        self.assertEqual(f"{result2}", "[('to boot dev', 'https://www.boot.dev'), ('to youtube', 'https://www.youtube.com/@bootdotdev')]")
+    
+    def test_markdown_err(self):
+        text = TextNode("This", TextType.NORMAL_TEXT)
+        with self.assertRaises(ValueError):
+            TextNode.extract_markdown_images(text)
+        with self.assertRaises(ValueError):
+            TextNode.extract_markdown_links(text)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
