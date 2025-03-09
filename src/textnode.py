@@ -35,71 +35,66 @@ class TextNode():
     def split_nodes_delimiter(self, text, result_list=[]):
         if self.text_type != TextType.NORMAL_TEXT:
             raise Exception("Not a valid format for text.")
-        if text == "":
+        if text == "": #base case
             result_list.clear()
             return result_list
-        lst_text = list(text)
-        if lst_text[0] == "**" or "*" or "`":
-            if lst_text[0:2] == ['*','*']:
-                split_text = text.split("**", maxsplit=2)
+        filter_text = filter(None, re.split(r'(\*{2}|\*|\`|!|\[)', text, maxsplit=1)) #Check for bold, italic, code text. Split two because both sides
+        split_text = list(filter_text) 
+        if len(split_text) > 1:                                                  #Make sure there is text to split
+                if split_text[0] == "":
+                    split_text.pop(0)                                             #of the text
+        if split_text[0] == "**" or split_text[0] == "*" or split_text[0] == "`":
+            filter_text = filter(None, re.split(r'(\*{2}|\*|\`)', text, maxsplit=2))
+            split_text = list(filter_text) 
+            if split_text[0] == "**":
                 result = TextNode(f"{split_text.pop(1)}", TextType.BOLD_TEXT)
+                split_text.pop(0)
+                split_text.pop(0)
                 feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
                 feedback_text.split_nodes_delimiter(feedback_text.text)
                 result_list.insert(0, result)
                 return result_list
-            if "*" == lst_text[0]:
-                split_text = text.split("*", maxsplit=2)
+            elif split_text[0] == "*":
                 result = TextNode(f"{split_text.pop(1)}", TextType.ITALIC_TEXT)
+                split_text.pop(0)
+                split_text.pop(0)
                 feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
                 feedback_text.split_nodes_delimiter(feedback_text.text)
                 result_list.insert(0, result)
                 return result_list
-            if "`" == lst_text[0]:
-                split_text = text.split("`", maxsplit=2)
+            elif split_text[0] == "`":
                 result = TextNode(f"{split_text.pop(1)}", TextType.CODE)
+                split_text.pop(0)
+                split_text.pop(0)
                 feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
                 feedback_text.split_nodes_delimiter(feedback_text.text)
                 result_list.insert(0, result)
+                return result_list 
+        elif split_text[0] == "!" or split_text[0] == "[":
+            if split_text[0] == "!":
+                image = TextNode.extract_markdown_images("".join(split_text))
+                result = TextNode(f"{image[0][0]}", TextType.IMAGES, f"{image[0][1]}")
+                split_text.pop(0)
+                popped_text = re.split(rf'\[{image[0][0]}\]\({image[0][1]}\)', "".join(split_text), maxsplit=1)
+                popped_text.pop(0)
+                feedback_text = TextNode("".join(popped_text), TextType.NORMAL_TEXT)
+                feedback_text.split_nodes_delimiter(feedback_text.text)                    
+                result_list.insert(0, result)
                 return result_list
-            else:
-                for i in range(0, len(lst_text)):
-                    if lst_text[i:i+2] == ['*','*']:
-                        split_text = text.split("**", maxsplit=2)
-                        result = TextNode(f"{split_text.pop(0)}", TextType.NORMAL_TEXT)
-                        result2 = TextNode(f"{split_text.pop(0)}", TextType.BOLD_TEXT)
-                        feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
-                        feedback_text.split_nodes_delimiter(feedback_text.text)
-                        result_list.insert(0, result2), result_list.insert(0, result)
-                        return result_list
-                    if lst_text[i] == "*":
-                        split_text = text.split("*", maxsplit=2)
-                        result = TextNode(f"{split_text.pop(0)}", TextType.NORMAL_TEXT)
-                        result2 = TextNode(f"{split_text.pop(0)}", TextType.ITALIC_TEXT)
-                        feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
-                        feedback_text.split_nodes_delimiter(feedback_text.text)
-                        result_list.insert(0, result2), result_list.insert(0, result)
-                        return result_list
-                    if lst_text[i] == "`":
-                        split_text = text.split("`", maxsplit=2)
-                        result = TextNode(f"{split_text.pop(0)}", TextType.NORMAL_TEXT)
-                        result2 = TextNode(f"{split_text.pop(0)}", TextType.CODE)
-                        feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
-                        feedback_text.split_nodes_delimiter(feedback_text.text)
-                        result_list.insert(0, result2), result_list.insert(0, result)
-                        return result_list
-                result =  TextNode(f"{text}", TextType.NORMAL_TEXT)
-                text = ""
-                feedback_text = TextNode(text, TextType.NORMAL_TEXT)
+            elif split_text[0] == "[":
+                link = TextNode.extract_markdown_links("".join(split_text))
+                result = TextNode(f"{link[0][0]}", TextType.LINKS, f"{link[0][1]}")
+                popped_text = re.split(rf'\[{link[0][0]}\]\({link[0][1]}\)', "".join(split_text), maxsplit=1)
+                feedback_text = TextNode("".join(popped_text), TextType.NORMAL_TEXT)
                 feedback_text.split_nodes_delimiter(feedback_text.text)
                 result_list.insert(0, result)
                 return result_list
-                    
-
-
-        
-        #Return a TextNode in the right order.
-        #Return them in order
-        #split them depending on the 
+        else:
+            result = TextNode(f"{split_text.pop(0)}", TextType.NORMAL_TEXT)
+            feedback_text = TextNode("".join(split_text), TextType.NORMAL_TEXT)
+            feedback_text.split_nodes_delimiter(feedback_text.text)
+            result_list.insert(0, result)
+            return result_list
 
     def extract_markdown_images(text):
         if not isinstance(text, str):
@@ -111,6 +106,13 @@ class TextNode():
             raise ValueError("Not a string.")
         list_of_links = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
         return list_of_links
+
+    def split_nodes_image(node):
+        listed = []
+        list_of_imgs = TextNode.extract_markdown_images(node.text)
+        for img in list_of_imgs:
+            listed.append(TextNode(f"{img[0]}", TextType.IMAGES, f"{img[1]}"))
+        return listed
 
     def __eq__(self, other):
        return self.text == other.text and self.text_type == other.text_type and self.url == other.url

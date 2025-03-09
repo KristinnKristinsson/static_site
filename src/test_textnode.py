@@ -92,6 +92,24 @@ class TestTextNode(unittest.TestCase):
             TextNode.extract_markdown_images(text)
         with self.assertRaises(ValueError):
             TextNode.extract_markdown_links(text)
+    
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.NORMAL_TEXT,
+        )
+        new_nodes = node.split_nodes_delimiter(node.text)
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.NORMAL_TEXT),
+                TextNode("image", TextType.IMAGES, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.NORMAL_TEXT),
+                TextNode(
+                    "second image", TextType.IMAGES, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+    )
 
 
 
