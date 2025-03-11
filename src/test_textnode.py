@@ -110,8 +110,42 @@ class TestTextNode(unittest.TestCase):
             ],
             new_nodes,
     )
-
-
+        
+    def test_split_links(self):
+        node = TextNode(
+            "This is text with an [linkin](https://wwww.lankin.com/zjjcJKZ.txt) and another [lonken](https://www.wha.du)",
+            TextType.NORMAL_TEXT,
+        )
+        new_nodes = node.split_nodes_delimiter(node.text)
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.NORMAL_TEXT),
+                TextNode("linkin", TextType.LINKS, "https://wwww.lankin.com/zjjcJKZ.txt"),
+                TextNode(" and another ", TextType.NORMAL_TEXT),
+                TextNode(
+                    "lonken", TextType.LINKS, "https://www.wha.du"
+                ),
+            ],
+            new_nodes,
+    )
+    
+    def the_ultimate_delimiter(self):
+        node = TextNode("*Hello* mister **mogli master miser** `the final one` ![the_image_takes](https://wwww.img.cas) what I wanted to [add to the conversation](https://lankindawnouts.com)", TextType.NORMAL_TEXT)
+        new_nodes = node.split_nodes_delimiter(node.text)
+        self.assertListEqual(
+            [
+                TextNode("Hello", TextType.ITALIC_TEXT),
+                TextNode(" mister ", TextType.NORMAL_TEXT),
+                TextNode("mogli master miser", TextType.BOLD_TEXT),
+                TextNode(" ", TextType.NORMAL_TEXT),
+                TextNode("the final one", TextType.CODE),
+                TextNode(" ", TextType.NORMAL_TEXT),
+                TextNode("the_image_takes", TextType.IMAGES, "https://wwww.img.cas"),
+                TextNode(" what I wanted to ", TextType.NORMAL_TEXT),
+                TextNode("add to the conversation", TextType.LINKS, "https://lankindawnouts.com"),
+            ],
+            new_nodes,
+    )
 
 
 if __name__ == "__main__":
