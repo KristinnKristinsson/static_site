@@ -4,6 +4,7 @@ from parentnode import ParentNode
 from textnode import TextNode, TextType
 from leafnode import LeafNode
 import blocknode
+from htmlnode import HTMLNode
 import re
 
 def main():
@@ -53,15 +54,8 @@ def main():
              DO YOU FEEL ME *OR* do you **feel** me' 
              I'm getting tired of this. 
         """
-    blocks = blocknode.markdown_to_blocks(md)
-    # digit = 0
-    # result = print(re.search(fr'({digit+1}. (.*))', blocks[3], flags=re.DOTALL ))
-    # print(result)
-    for i in range(0, len(blocks)):
-        typeit = blocknode.block_to_block_type(blocks[i])
-        print(typeit)
-    
-    print(typeit)
+    results = ParentNode.markdown_to_html_node(md)
+    print(results)
 
 
 main()

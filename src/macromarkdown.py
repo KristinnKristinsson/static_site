@@ -1,15 +1,13 @@
-#from htmlnode import HTMLNode
 from enum import Enum
 import re
 
-
 class BlockType(Enum):
-        PARAGRAPH = "paragraph"
-        HEADING = "heading"
+        PARAGRAPH = "p"
+        HEADING = "h"
         CODE = "code"
-        QUOTE = "quote"
-        UNORDERED_LIST = "unordered list"
-        ORDERED_LIST = "ordered list"
+        QUOTE = "blockquote"
+        UNORDERED_LIST = "ul"
+        ORDERED_LIST = "ol"
 
 def markdown_to_blocks(text):
     if not isinstance(text, str):
@@ -24,8 +22,6 @@ def markdown_to_blocks(text):
     return result_block
 
 def block_to_block_type(block):
-    print(len(block))
-    print(block)
     if re.search(r'(#)\1* (s?)(.*)', block, flags=re.DOTALL) != None:
         if re.search(r'(#)\1* (s?)(.*)', block, flags=re.DOTALL).span()[1] == len(block):
             return BlockType.HEADING
@@ -45,8 +41,3 @@ def block_to_block_type(block):
     else:
         return BlockType.PARAGRAPH
     raise Exception("Non-compatible text type.")
-
-
-    
-   
-    

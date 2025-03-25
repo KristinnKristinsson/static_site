@@ -1,8 +1,8 @@
 import unittest
 
-import blocknode
+import macromarkdown
 
-class TestBlockNode(unittest.TestCase):
+class Testmacromarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
             This is **bolded** paragraph
@@ -13,7 +13,7 @@ class TestBlockNode(unittest.TestCase):
         - This is a list
         - with items
         """
-        blocks = blocknode.markdown_to_blocks(md)
+        blocks = macromarkdown.markdown_to_blocks(md)
         self.assertEqual(
             blocks,
             [
@@ -41,7 +41,7 @@ class TestBlockNode(unittest.TestCase):
 
             I'm getting tired of this.
         """
-        blocks = blocknode.markdown_to_blocks(md2)
+        blocks = macromarkdown.markdown_to_blocks(md2)
         self.assertEqual(
             blocks,
             ['The *italians do like* this kind of text', 
@@ -97,30 +97,30 @@ class TestBlockNode(unittest.TestCase):
              9. I mean I think you really like mee
              6. eheeee eeeeeeheeeeeee
         """
-        blocks = blocknode.markdown_to_blocks(md)
-        result = blocknode.block_to_block_type(blocks[0])
+        blocks = macromarkdown.markdown_to_blocks(md)
+        result = macromarkdown.block_to_block_type(blocks[0])
         self.assertEqual(f"{result}", "BlockType.HEADING")
-        result2 = blocknode.block_to_block_type(blocks[1])
+        result2 = macromarkdown.block_to_block_type(blocks[1])
         self.assertEqual(f"{result2}", "BlockType.ORDERED_LIST")
-        result3 = blocknode.block_to_block_type(blocks[2])
+        result3 = macromarkdown.block_to_block_type(blocks[2])
         self.assertEqual(f"{result3}", "BlockType.CODE")
-        result4 = blocknode.block_to_block_type(blocks[3])
+        result4 = macromarkdown.block_to_block_type(blocks[3])
         self.assertEqual(f"{result4}", "BlockType.PARAGRAPH")
-        result5 = blocknode.block_to_block_type(blocks[4])
+        result5 = macromarkdown.block_to_block_type(blocks[4])
         self.assertEqual(f"{result5}", "BlockType.QUOTE")
-        result6 = blocknode.block_to_block_type(blocks[5])
+        result6 = macromarkdown.block_to_block_type(blocks[5])
         self.assertEqual(f"{result6}", "BlockType.PARAGRAPH")
-        result7 = blocknode.block_to_block_type(blocks[6])
+        result7 = macromarkdown.block_to_block_type(blocks[6])
         self.assertEqual(f"{result7}", "BlockType.HEADING")
-        result8 = blocknode.block_to_block_type(blocks[7])
+        result8 = macromarkdown.block_to_block_type(blocks[7])
         self.assertEqual(f"{result8}", "BlockType.PARAGRAPH")
-        result9 = blocknode.block_to_block_type(blocks[8])
+        result9 = macromarkdown.block_to_block_type(blocks[8])
         self.assertEqual(f"{result9}", "BlockType.UNORDERED_LIST")
-        result10 = blocknode.block_to_block_type(blocks[9])
+        result10 = macromarkdown.block_to_block_type(blocks[9])
         self.assertEqual(f"{result10}", "BlockType.PARAGRAPH")
-        result11 = blocknode.block_to_block_type(blocks[10])
+        result11 = macromarkdown.block_to_block_type(blocks[10])
         self.assertEqual(f"{result11}", "BlockType.PARAGRAPH")
     def test_error_markdown(self):
         md = 5555555
         with self.assertRaises(ValueError):
-            blocknode.markdown_to_blocks(md)
+            macromarkdown.markdown_to_blocks(md)
