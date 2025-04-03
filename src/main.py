@@ -1,9 +1,8 @@
 
 #from textnode import TextType
-from parentnode import ParentNode
 from textnode import TextNode, TextType
-from leafnode import LeafNode
-import blocknode
+import macromarkdown
+import mdtohtml
 from htmlnode import HTMLNode
 import re
 
@@ -12,9 +11,9 @@ def main():
     md ="""
             ### The *italians do like* this kind of text
 
-            anything else than the first one
+            anything **else** than the first one
 
-            1. Because this time I think it is different
+            1. Because `this time` I think it is different
             2. I mean I think you really like meee
 
             5. Because this time I think it is different
@@ -24,7 +23,7 @@ def main():
 
              ```
              where we get what we want
-             and we want to get paid
+             and we **want** to get paid
              but it feels so bad
              to be so sad 
              ```
@@ -54,7 +53,7 @@ def main():
              DO YOU FEEL ME *OR* do you **feel** me' 
              I'm getting tired of this. 
         """
-    results = ParentNode.markdown_to_html_node(md)
+    results = mdtohtml.markdown_to_html_node(md)
     print(results)
 
 

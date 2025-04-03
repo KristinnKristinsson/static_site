@@ -7,11 +7,11 @@ def split_nodes_delimiter(text, result_list=[]):
     if text == "": #base case
         result_list.clear()
         return result_list
-    filter_text = filter(None, re.split(r'(\*{2}|\*|\`|!|\[)', text, maxsplit=1)) #Check for bold, italic, code text. Split two because both sides
+    filter_text = filter(None, re.split(r'(\*{2}|\*|\`|!|\[)', text, maxsplit=1))
     split_text = list(filter_text) 
-    if len(split_text) > 1:                                                  #Make sure there is text to split
+    if len(split_text) > 1:
             if split_text[0] == "":
-                split_text.pop(0)                                             #of the text
+                split_text.pop(0)
     if split_text[0] == "**" or split_text[0] == "*" or split_text[0] == "`":
         filter_text = filter(None, re.split(r'(\*{2}|\*|\`)', text, maxsplit=2))
         split_text = list(filter_text) 

@@ -1,3 +1,5 @@
+import re
+
 class HTMLNode():
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -15,6 +17,8 @@ class HTMLNode():
         for key, value in self.props.items():
             the_props_string += f' {key}="{value}"'
         return the_props_string
+    
+    
     
     def __eq__(self, other):
         return self.tag == other.tag and self.value == other.value and self.children == other.children and self.props == other.props

@@ -4,7 +4,7 @@ import re
 class BlockType(Enum):
         PARAGRAPH = "p"
         HEADING = "h"
-        CODE = "code"
+        CODE = "pre"
         QUOTE = "blockquote"
         UNORDERED_LIST = "ul"
         ORDERED_LIST = "ol"
@@ -22,22 +22,25 @@ def markdown_to_blocks(text):
     return result_block
 
 def block_to_block_type(block):
+    header_int = 0
     if re.search(r'(#)\1* (s?)(.*)', block, flags=re.DOTALL) != None:
         if re.search(r'(#)\1* (s?)(.*)', block, flags=re.DOTALL).span()[1] == len(block):
-            return BlockType.HEADING
+            how_many = re.findall(r'^(#+)', block, re.DOTALL)
+            header_int = len(how_many[0])
+            return BlockType.HEADING, header_int
     elif re.search(r'```(s?)(.*)```', block, flags=re.DOTALL) != None:
         if re.search(r'```(s?)(.*)```', block, flags=re.DOTALL).span()[1] == len(block):
-            return BlockType.CODE
+            return BlockType.CODE, header_int
     elif re.search(r'(> (.*)\n)(> (.*))', block, flags=re.DOTALL) != None: 
         if re.search(r'(> (.*)\n)(> (.*))', block, flags=re.DOTALL | re.MULTILINE).span()[1] == len(block):
-            return BlockType.QUOTE
+            return BlockType.QUOTE, header_int
     elif re.search(r'(- (.*)\n)(- (.*))', block, flags=re.DOTALL) != None: 
         if re.search(r'(- (.*)\n)(- (.*))', block, flags=re.DOTALL).span()[1] == len(block):
-            return BlockType.UNORDERED_LIST
+            return BlockType.UNORDERED_LIST, header_int
     elif re.search(fr'(1. (.*))', block, flags=re.DOTALL ) != None: 
         digit = 0
         if re.search(fr'({digit+1}. (.*))', block, flags=re.DOTALL ).span()[1] == len(block):
-            return BlockType.ORDERED_LIST
+            return BlockType.ORDERED_LIST, header_int
     else:
-        return BlockType.PARAGRAPH
+        return BlockType.PARAGRAPH, header_int
     raise Exception("Non-compatible text type.")

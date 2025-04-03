@@ -31,6 +31,8 @@ class TextNode():
             case text_node.text_type.IMAGES:
                 return LeafNode("img", text_node.text, {"src": f"{text_node.url}"})
         raise Exception("Non-compatible text type.")
+    
+    
 
     def __eq__(self, other):
        return self.text == other.text and self.text_type == other.text_type and self.url == other.url
