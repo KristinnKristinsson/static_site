@@ -45,7 +45,7 @@ def navigate_static(start_dir):
 def find_start_dir():
     return "../static_site/static"
 
-def find_target_dir(basepath = "../static_site/public"):
+def find_target_dir(basepath = "../static_site/docs"):
     try:
         sys.argv[1]
         if os.path.exists(sys.argv[1]):
