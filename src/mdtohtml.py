@@ -15,15 +15,17 @@ def markdown_to_html_node(markdown, lst_html_nodes = []):
         lst_texts.clear()
         which_type, header_int = macromarkdown.block_to_block_type(blocks[i])
         blocks[i] = blocks[i].replace("``", "")
-        blocks[i] = re.sub(r"^(#+)", "", blocks[i])
+        blocks[i] = re.sub(r"^(#+) ", "", blocks[i])
         if which_type.value == "ol":
-            blocks[i] = re.sub(r"(\d). ", r"<li>\1. ", blocks[i])
+            blocks[i] = re.sub(r"(\d). ", r"<li>", blocks[i])
             blocks[i] = re.sub(r"\n", "</li>\n", blocks[i])
             blocks[i] = blocks[i]+"</li>\n" 
         if which_type.value == "ul":
-            blocks[i] = re.sub(r"- ", "<li>- ", blocks[i])
+            blocks[i] = re.sub(r"- ", "<li>", blocks[i])
             blocks[i] = re.sub(r"\n", r"</li>\n", blocks[i])
             blocks[i] = blocks[i]+"</li>\n"
+        if which_type.value == "blockquote":
+            blocks[i] = re.sub(r">+(\s)", "", blocks[i])
         
         txts = micromarkdown.split_nodes_delimiter(blocks[i])
         for text_nodes in txts:

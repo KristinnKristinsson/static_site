@@ -105,7 +105,18 @@ class TestMicroMD(unittest.TestCase):
             ],
             new_nodes,
     )
+    
+    def test_extract_title(self):
+        txt = "# Hello"
+        result = micromarkdown.extract_title(txt)
+        self.assertEqual(result, "Hello")
+    
+    def test_extract_title_gone_wrong(self):
+        txt = "What is this?"
+        with self.assertRaises(Exception):
+            micromarkdown.extract_title(txt)
         
 
 if __name__ == "__main__":
+
     unittest.main()

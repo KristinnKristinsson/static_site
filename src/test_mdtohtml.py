@@ -26,8 +26,8 @@ class TestMdToHtml(unittest.TestCase):
         self.assertEqual(result, "<div><p>this is just normal text</p></div>")
         self.assertEqual(result2, "<div><p>this is a text with <b>bold text</b> and <i>italic text</i> and <code>code</code></p></div>")
         self.assertEqual(result3, "<div><pre><code>A given code\nShould look like\nthis</code></pre></div>")
-        self.assertEqual(result4, "<div><ul><li>- an unordered list</li>\n<li>- should look like</li>\n<li>- this</li>\n</ul></div>")
-        self.assertEqual(result5, "<div><ol><li>1. and an ordered list</li>\n<li>2. should look like</li>\n<li>3. this.</li>\n</ol></div>")
+        self.assertEqual(result4, "<div><ul><li> an unordered list</li>\n<li> should look like</li>\n<li> this</li>\n</ul></div>")
+        self.assertEqual(result5, "<div><ol><li> and an ordered list</li>\n<li> should look like</li>\n<li> this.</li>\n</ol></div>")
         self.assertEqual(result6, "<div><blockquote>> everybody \n> likes \n> Raymond</blockquote></div>")
         self.assertEqual(result7, "<div><h3> Don't forget a header as well</h3></div>")
         self.assertEqual(result8, "<div><blockquote>> <i>is</i> <b>this</b> the real life\n> <i>is</i> <b>this</b> just <code>fantasy</code></blockquote></div>")
@@ -83,8 +83,8 @@ class TestMdToHtml(unittest.TestCase):
         self.assertEqual(result, 
 """<div><h3> The <i>italians do like</i> this kind of text</h3>
 <p>anything <b>else</b> than the first one</p>
-<ol><li>1. Because <code>this time</code> I think it is different</li>
-<li>2. I mean I think you really like meee</li>
+<ol><li> Because <code>this time</code> I think it is different</li>
+<li> I mean I think you really like meee</li>
 </ol>
 <p>5. Because this time I think it is different
 9. I mean I think you really like mee
@@ -106,9 +106,9 @@ and I'm sure its fine</p>
 2. work</p>
 <h4> Just to keep it going</h4>
 <p>"What will happen now?"</p>
-<ul><li>- except</li>
-<li>- when</li>
-<li>- we list it.</li>
+<ul><li> except</li>
+<li> when</li>
+<li> we list it.</li>
 </ul>
 <p>DO YOU FEEL ME <i>OR</i> do you <b>feel</b> me' 
 I'm getting tired of this.</p></div>""")

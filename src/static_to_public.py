@@ -1,4 +1,7 @@
-import os, shutil, re
+import os, shutil, re, sys
+import macromarkdown
+import micromarkdown
+from mdtohtml import markdown_to_html_node
 
 def delete_public(target):
    if os.path.exists(target):
@@ -42,8 +45,42 @@ def navigate_static(start_dir):
 def find_start_dir():
     return "../static_site/static"
 
-def find_target_dir():
-    return "../static_site/public"
+def find_target_dir(basepath = "../static_site/public"):
+    try:
+        sys.argv[1]
+        if os.path.exists(sys.argv[1]):
+            basepath = sys.argv[1]
+    except IndexError:
+        pass
+    return basepath
+
+def find_template():
+    return "../static_site/template.html"
+
+def find_content():
+    return "../static_site/content"
+
+def paste_public_content(source, start, target, template_path):
+    os.makedirs(target, exist_ok=True)
+
+    for item in source:
+        if isinstance(item, dict):
+            for folder_name, nested_contents in item.items():
+                new_source = os.path.join(start, folder_name)
+                new_target = os.path.join(target, folder_name)
+                paste_public_content(nested_contents, new_source, new_target, template_path)
+        else:
+            # It's a file
+            generate_page(start + "/" + item, template_path, target)
+
+def create_content():
+    from_path = find_content()
+    template_path = find_template()
+    dest_path = find_target_dir()
+    structure = navigate_static(from_path)
+    paste_public_content(structure, from_path, dest_path, template_path)
+    # paste_public(structure, from_path, dest_path)
+
     
 
 def static_to_public():
@@ -53,14 +90,33 @@ def static_to_public():
    delete_public(target)
    paste_public(source, start, target)
    
-   # Could be easy... easy like Python libraries, yeeeeah.
-   # folder = "../static_site/public"
-   # for filename in os.listdir(folder):
-   #    file_path = os.path.join(folder, filename)
-   #    try:
-   #       if os.path.isfile(file_path) or os.path.islink(file_path):
-   #             os.unlink(file_path)
-   #       elif os.path.isdir(file_path):
-   #             shutil.rmtree(file_path)
-   #    except Exception as e:
-   #       print('Failed to delete %s. Reason: %s' % (file_path, e))
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating a webpage from {from_path} to {dest_path} using {template_path}\n Please hold...")
+    finalized_article = ""
+    md_path = open(from_path)
+    md_content = md_path.read()
+    temp_path = open(template_path)
+    temp_content = temp_path.read()
+    html_finalized = markdown_to_html_node(md_content)
+    header = micromarkdown.extract_title(md_content)
+    rpls_content = re.sub("{{ Content }}", html_finalized, temp_content)
+    finalized_article = re.sub("{{ Title }}", header, rpls_content)
+    name_of_file = re.findall(r"\w+.\w+$", from_path)
+    the_path = re.sub(r"\w+.\w+", "", from_path)
+    the_file = re.sub(".md", ".html", name_of_file[0] )
+    save_path = os.path.join(dest_path, the_file)
+
+    with open(save_path, "w") as f:
+            f.write(finalized_article)
+
+
+    # header_page = ""
+    # content_md = ""
+    # finalized_article = ""
+
+    # with open(from_path, "w") as md_file:
+    #     header_page = micromarkdown.extract_title(md_file)
+    #     content_md = markdown_to_html_node(md_file)
+
+        
+    

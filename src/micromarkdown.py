@@ -7,13 +7,13 @@ def split_nodes_delimiter(text, result_list=[]):
     if text == "": #base case
         result_list.clear()
         return result_list
-    filter_text = filter(None, re.split(r'(\*{2}|\*|\`|!|\[)', text, maxsplit=1))
+    filter_text = filter(None, re.split(r'(\*{2}|\*|\`|!(?=\[)|\[|\_)', text, maxsplit=1))
     split_text = list(filter_text) 
     if len(split_text) > 1:
             if split_text[0] == "":
                 split_text.pop(0)
-    if split_text[0] == "**" or split_text[0] == "*" or split_text[0] == "`":
-        filter_text = filter(None, re.split(r'(\*{2}|\*|\`)', text, maxsplit=2))
+    if split_text[0] == "**" or split_text[0] == "*" or split_text[0] == "`" or split_text[0] == "_":
+        filter_text = filter(None, re.split(r'(\*{2}|\*|\`|\_)', text, maxsplit=2))
         split_text = list(filter_text) 
         if split_text[0] == "**":
             result = TextNode(f"{split_text.pop(1)}", TextType.BOLD_TEXT)
@@ -24,6 +24,14 @@ def split_nodes_delimiter(text, result_list=[]):
             result_list.insert(0, result)
             return result_list
         elif split_text[0] == "*":
+            result = TextNode(f"{split_text.pop(1)}", TextType.ITALIC_TEXT)
+            split_text.pop(0)
+            split_text.pop(0)
+            feedback_text = "".join(split_text)
+            split_nodes_delimiter(feedback_text)
+            result_list.insert(0, result)
+            return result_list
+        elif split_text[0] == "_":
             result = TextNode(f"{split_text.pop(1)}", TextType.ITALIC_TEXT)
             split_text.pop(0)
             split_text.pop(0)
@@ -75,6 +83,16 @@ def extract_markdown_links(text):
         raise ValueError("Not a string.")
     list_of_links = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return list_of_links
+
+def extract_title(markdown):
+    if markdown[0] == "#":
+        header = re.findall(r"^# (s?)(.*)", markdown)
+        print(header)
+        title = header[0][1].strip("# ")
+        return title
+    else:
+        raise Exception("No Header to the markdown file.")
+
 
 def split_nodes_image(node):
     listed = []
