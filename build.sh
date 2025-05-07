@@ -1,1 +1,1 @@
-python3 src/main.py "/https://KristinnKristinsson.github.io/static_site/"
+python3 src/main.py "/https://github.com/KristinnKristinsson/static_site/docs"
