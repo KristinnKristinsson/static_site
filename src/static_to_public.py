@@ -100,7 +100,7 @@ def generate_page(from_path, template_path, dest_path):
     html_finalized = markdown_to_html_node(md_content)
     header = micromarkdown.extract_title(md_content)
     rpls_content = re.sub("{{ Content }}", html_finalized, temp_content)
-    rpls_paths = re.sub("{{ basepath }}", rpls_content, dest_path)
+    rpls_paths = re.sub("{{ basepath }}", dest_path, rpls_content)
     finalized_article = re.sub("{{ Title }}", header, rpls_paths)
     name_of_file = re.findall(r"\w+.\w+$", from_path)
     the_path = re.sub(r"\w+.\w+", "", from_path)
