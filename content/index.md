@@ -1,6 +1,6 @@
 # Tolkien Fan Club
 
-![JRR Tolkien sitting]({{ basepath }}/images/tolkien.png)
+![JRR Tolkien sitting]({{ basepath }}/assets/images/tolkien.png)
 
 Here's the deal, **I like Tolkien**.
 
