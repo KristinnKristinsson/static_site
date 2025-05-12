@@ -1,6 +1,6 @@
 # Why Glorfindel is More Impressive than Legolas
 
-[< Back Home](/)
+[< Back Home]({{ basepath }})
 
 ![Glorfindel image]({{ basepath }}assets/images/glorfindel.png)
 

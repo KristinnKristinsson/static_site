@@ -1,6 +1,6 @@
 # Why Tom Bombadil Was a Mistake
 
-[< Back Home](/)
+[< Back Home]({{ basepath }})
 
 ![Tom Bombadil image]({{ basepath }}assets/images/tom.png)
 
