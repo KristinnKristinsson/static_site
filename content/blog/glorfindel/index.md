@@ -2,7 +2,7 @@
 
 [< Back Home](/)
 
-![Glorfindel image]({{ basepath }}/assets/images/glorfindel.png)
+![Glorfindel image]({{ basepath }}assets/images/glorfindel.png)
 
 > "The deeds of Glorfindel shine bright as the morning sun, whilst the feats of others are as the flickering of stars in the night sky."
 

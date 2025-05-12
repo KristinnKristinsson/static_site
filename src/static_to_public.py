@@ -91,7 +91,7 @@ def generate_page(from_path, template_path, dest_path, basepath):
     rpls_paths = re.sub("{{ basepath }}", basepath, rpls_content)
     finalized_article = re.sub("{{ Title }}", header, rpls_paths)
     name_of_file = re.findall(r"\w+.\w+$", from_path)
-    the_path = re.sub(r"\w+.\w+", "", from_path)
+    #the_path = re.sub(r"\w+.\w+", "", from_path)
     the_file = re.sub(".md", ".html", name_of_file[0] )
     save_path = os.path.join(dest_path, the_file)
 
