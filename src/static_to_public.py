@@ -48,7 +48,7 @@ def find_start_dir():
 def find_target_dir(basepath = "../static_site/docs"):
     try:
         sys.argv[1]
-        if os.path.exists(sys.argv[1]):
+        if len(sys.argv) > 1:
             basepath = sys.argv[1]
     except IndexError:
         pass
@@ -87,7 +87,7 @@ def static_to_public():
    start = find_start_dir()
    target = find_target_dir()
    source = navigate_static(start)
-   delete_public(target)
+#  delete_public(target)
    paste_public(source, start, target)
    
 def generate_page(from_path, template_path, dest_path):
